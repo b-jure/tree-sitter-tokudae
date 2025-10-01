@@ -1,0 +1,44 @@
+=== Constants
+true
+false
+nil
+inf
+infinity
+
+---
+
+(exp true)
+(exp false)
+(exp nil)
+(exp inf)
+(exp infinity)
+
+=== Arithmetic expressions
+1 + 2 * 3 - 4
+
+---
+
+(exp
+  (exp
+    (exp (DecInt))
+    "+"
+    (exp
+      (exp (DecInt))
+      "*"
+      (exp (DecInt))))
+  "-"
+  (exp (DecInt)))
+
+=== Function call
+foo(1, 2)
+
+---
+
+(call
+  (prefixexp (var (Name)))
+  "("
+  (explist
+    (exp (DecInt))
+    ","
+    (exp (DecInt)))
+  ")")
