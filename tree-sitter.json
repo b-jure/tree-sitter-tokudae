@@ -6,9 +6,9 @@
       "camelcase": "Tokudae",
       "title": "Tokudae",
       "scope": "source.toku",
-      "file-types": [
-        "toku"
-      ],
+      "file-types": [ "toku" ],
+      "highlights": "queries/highlights.scm",
+      "tags": "queries/tags.scm",
       "injection-regex": "^tokudae$",
       "class-name": "TreeSitterTokudae"
     }
@@ -16,7 +16,7 @@
   "metadata": {
     "version": "1.0.0",
     "license": "MIT",
-    "description": "Parser for the Tokudae programming language",
+    "description": "Tokudae grammar for tree-sitter",
     "authors": [
       {
         "name": "Jure Bagić",
