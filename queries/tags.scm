@@ -26,7 +26,7 @@
 
 (metafield
   field: (identifier) @name
-  value: (metamethod)) @definition.function
+  value: (function_definition)) @definition.function
 
 (method name: (identifier) @name) @definition.method
 
@@ -81,31 +81,23 @@
 
 (method body: (_ (super) @reference.class))
 
-(metafield
-  value: (metamethod
-    parameters: (parameters
-      first: (identifier) @reference.class
-      (#eq? @reference.class "self"))
-    body: (_
-      (identifier) @reference.class
-      (#eq? @reference.class "self")
-      (#not-has-parent? @reference.class dot_index_expression))))
+((identifier) @reference.class
+  (#eq? @reference.class "self")
+  (#has-ancestor? @reference.class function_definition)
+  (#has-ancestor? @reference.class metafield))
 
-(metafield
-  value: (metamethod
-    parameters: (parameters
-      (identifier) @name
-      (#not-match? @name "\\bself\\b"))
-    body: (_
-      (identifier) @reference.class
-      (#eq? @reference.class "self")
-      (#not-has-parent? @reference.class dot_index_expression))))
-    
-(metafield
-  value: (metamethod
-    body: (_ (super) @reference.class)))
+((identifier) @reference.class
+  (#eq? @reference.class "self")
+  (#has-ancestor? @reference.class method))
 
-(function_call
+((super) @reference.class
+  (#has-ancestor? @reference.class function_definition)
+  (#has-ancestor? @reference.class metafield))
+
+((super) @reference.class
+  (#has-ancestor? @reference.class method))
+
+(final_call
   name: [
     (identifier) @name
     (dot_index_expression

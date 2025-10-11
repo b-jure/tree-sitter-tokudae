@@ -15,21 +15,12 @@ const list_seq = (rule, separator, trailing_separator = false) =>
 
 const name_list = ($) => list_seq(field('name', $.identifier), ',');
 
-const toparams = ($, rule) => alias(rule, $.parameters);
-
-const parameters = function($, parenthesized = true, method = false) {
-  const rule = method ? $._method_parameter_list : $._parameter_list;
-  return field('parameters', toparams($, parenthesized
-                             ? seq('(', optional(rule), ')')
-                             : seq('|', optional(rule), '|')));
-}
+const toparams = ($, rule) => field('parameters', alias(rule, $.parameters));
 
 module.exports = grammar({
   name: 'tokudae',
 
   extras: $ => [/\s/, $.comment],
-
-  conflicts: $ => [[$._parameter_list]],
 
   externals: $ => [
     /* C-style comment */
@@ -99,7 +90,7 @@ module.exports = grammar({
       'local',
       'fn',
       field('name', $.identifier),
-      parameters($),
+      toparams($, $._parenthesized_parameters),
       $._function_body
     ),
 
@@ -161,9 +152,7 @@ module.exports = grammar({
 
     decrement: $ => seq(field('name', $.variable), '--'),
 
-    call_statement: $ => seq(
-      alias($._final_expression_call, $.function_call), ';'
-    ),
+    call_statement: $ => seq($.final_call, ';'),
 
     break_statement: _ => seq('break', ';'),
 
@@ -172,7 +161,7 @@ module.exports = grammar({
     function_statement: $ => seq(
       'fn',
       field('name', $._statement_name),
-      parameters($),
+      toparams($, $._parenthesized_parameters),
       $._function_body
     ),
 
@@ -220,7 +209,7 @@ module.exports = grammar({
       ';',
       optional(field('condition', $.expression)),
       ';',
-      optional(field('next', $.assignment))
+      optional(field('next', choice($.assignment, $.final_call)))
     ),
 
     _for_init: $ => choice(
@@ -450,20 +439,13 @@ module.exports = grammar({
 
     vararg_expression: _ => '...',
 
-    function_definition: $ => seq(
-      choice($._function_clause, $._lambda_clause),
-      $._function_body
-    ),
-
-    _function_clause: $ => seq('fn', parameters($)),
-
-    _lambda_clause: $ => parameters($, false),
+    function_definition: $ => seq($._function_clause, $._function_body),
 
     _prefix_expression: $ => prec(1, choice(
+      $.super,
       $.variable,
       $.function_call,
-      $.parenthesized_expression,
-      $.super
+      $.parenthesized_expression
     )),
 
     variable: $ => choice(
@@ -485,9 +467,9 @@ module.exports = grammar({
       field('field', $.identifier)
     ),
 
-    function_call: $ => seq($._final_expression_call, optional('?')),
+    function_call: $ => seq($.final_call, optional('?')),
 
-    _final_expression_call: $ => seq(
+    final_call: $ => seq(
       field('name', $._prefix_expression),
       field('arguments', $.arguments),
     ),
@@ -562,36 +544,35 @@ module.exports = grammar({
     method: $ => seq(
       'fn',
       field('name', $.identifier),
-      parameters($, true, true),
+      toparams($, $._parenthesized_parameters),
       $._function_body
     ),
 
     metafield: $ => seq(
       field('field', $.identifier),
       '=',
-      field('value', choice($.metamethod, $.expression)),
+      field('value', $.expression),
       ';'
     ),
 
-    metamethod: $ => prec(1, seq(
-      field('parameters',
-        choice(
-          seq('|', optional(toparams($, $._method_parameter_list)), '|'),
-          seq("fn", '(', optional(toparams($, $._method_parameter_list)), ')')
-        )
-      ),
-      $._function_body
-    )),
+    _function_clause: $ => choice(
+      seq('fn', toparams($, $._parenthesized_parameters)),
+      toparams($, $._lambda_parameters)
+    ),
 
-    _method_parameter_list: $ => prec(1, choice(
+    _parenthesized_parameters: $ => seq('(', optional($._parameters), ')'),
+
+    _lambda_parameters: $ => seq('|', optional($._parameters), '|'),
+
+    _parameters: $ => choice(
       seq(
         field('first', $.identifier),
-        field('rest', optional(seq(',', $._parameter_list)))
+        field('rest', optional(seq(',', $._additional_parameters)))
       ),
       $.vararg_expression
-    )),
+    ),
 
-    _parameter_list: $ => choice(
+    _additional_parameters: $ => choice(
       seq(name_list($), optional(seq(',', $.vararg_expression))),
       $.vararg_expression
     ),
