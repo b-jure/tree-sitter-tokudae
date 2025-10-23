@@ -4,7 +4,7 @@
 
 ["," "." "?"] @ignore
 
-["(" ")" "{" "}"] @ignore
+["{" "}"] @ignore
 
 (super) @ignore
 
@@ -102,16 +102,9 @@
 
 ;}{=Bracket======================================
 
+["(" ")"] @punctuation.bracket
+
 (bracket_index_expression ["[" "]"] @punctuation.bracket)
-
-(arguments ["(" ")"] @punctuation.bracket)
-
-(parameters ["(" ")"] @punctuation.bracket)
-
-(for_statement clause: ["(" ")"] @punctuation.bracket)
-
-(if_statement
-  condition: (parenthesized_expression ["(" ")"] @punctuation.bracket))
 
 ;}{=List=========================================
 
