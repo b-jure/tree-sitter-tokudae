@@ -193,7 +193,9 @@ module.exports = grammar({
 
     do_while_statement: $ => seq(
       'do',
-      field('body', $.statement),
+      '{',
+      field('body', optional(alias($._block, $.block))),
+      '}',
       'while',
       field('condition', $.expression),
       ';'
