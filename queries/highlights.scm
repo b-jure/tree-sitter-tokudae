@@ -175,6 +175,13 @@
       field: (identifier) @type)
   ])
 
+(class_definition
+  superclass: [
+    (identifier) @type
+    (dot_index_expression
+      field: (identifier) @type)
+  ])
+
 (assignment_statement
   (assignment
     (variable_list .
@@ -281,4 +288,5 @@
       content: (string_content) @string.regexp)))
 
 ;}}==============================================
+
 
