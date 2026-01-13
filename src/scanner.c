@@ -1,4 +1,3 @@
-#define _XOPEN_SOURCE 600
 #include <limits.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -51,43 +50,12 @@ static inline unsigned repeat (TSLexer *lx, char c) {
 }
 
 
-#if 1 && !defined(_WIN32) /* for debug */
-
-#include <signal.h>
-#include <unistd.h>
-
-static int handler = 0;
-
-static void sigsegv_handler (int signum) {
-  _exit(69); // exit with recognizable code
-}
-
-static void register_sigsegv_handler (void) {
-  struct sigaction act = { .sa_handler = sigsegv_handler };
-  sigaction(SIGSEGV, &act, NULL);
-}
-
-#define plog(msg)   fprintf(stderr, msg "\n");
-
-#else
-
-#define handler                     1 /* no-op */
-#define register_sigsegv_handler()  /* empty */
-#define plog(msg)                   /* empty */
-
-#endif
-
-
 void *tree_sitter_tokudae_external_scanner_create () {
-  plog("creating external scanner for tokudae");
-  if (!handler)
-    register_sigsegv_handler();
   return ts_calloc(1, sizeof(unsigned));
 }
 
 
 void tree_sitter_tokudae_external_scanner_destroy (void *data) {
-  plog("destroying external scanner for tokudae");
   ts_free(tolevel(data));
 }
 
@@ -213,12 +181,6 @@ static bool commentend (TSLexer *lx) {
 }
 
 
-static inline void skipws (TSLexer *lx) {
-  while (iswspace(lx->lookahead))
-    skip(lx);
-}
-
-
 bool tree_sitter_tokudae_external_scanner_scan (void *data, TSLexer *lx,
                                                 const bool *sym) {
   unsigned *plevel = tolevel(data);
@@ -233,8 +195,9 @@ bool tree_sitter_tokudae_external_scanner_scan (void *data, TSLexer *lx,
     res = commentcontent(lx);
   else if (sym[TT_CCOMMENT_END])
     res = commentend(lx);
-  else { /* otherwise might be start of block string or comment */
-    skipws(lx); /* whitespace is not part of string or comment */
+  else { /* else it might be start of a block string/comment */
+    while (iswspace(lx->lookahead))
+      skip(lx); /* whitespace is not part of a string/comment */
     if (sym[TT_STRING_BLOCK_START])
       res = blockstart(plevel, lx);
     else if (sym[TT_CCOMMENT_START])
