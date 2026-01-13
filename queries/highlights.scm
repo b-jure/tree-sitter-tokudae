@@ -65,7 +65,7 @@
 
 ((identifier) @module.builtin
   (#any-of? @module.builtin
-    "__G" "debug" "io" "math" "os" "package" "string" "reg" "list" "utf8"))
+    "__G" "debug" "io" "math" "os" "package" "string" "reg" "list" "utf8" "co"))
 
 (parameters (identifier) @variable.parameter)
 
@@ -249,7 +249,7 @@
   field: (identifier) @function.builtin
   (#any-of? @function.builtin
     "__getidx" "__setidx" "__gc" "__close" "__call" "__init" 
-    "__concat" "__mod" "__pow" "__add" "__sub" "__mul" "__div" 
+    "__concat" "__mod" "__pow" "__add" "__sub" "__mul" "__div" "__idiv"
     "__shl" "__shr" "__band" "__bor" "__bxor" "__unm" "__bnot" 
     "__eq" "__lt" "__le" "__name" ))
 
