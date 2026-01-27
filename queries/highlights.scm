@@ -2,9 +2,13 @@
 
 ["case" "default" "in" "inherits" "else"] @ignore
 
-["," "." "?"] @ignore
+["," "."] @ignore
 
 ["{" "}"] @ignore
+
+(call_check_char) @ignore
+
+(raw_access_char) @ignore
 
 (super) @ignore
 
@@ -14,7 +18,7 @@
 
 ;}{==Keyword=====================================
 
-["break" "continue" "local" ";"] @keyword
+["break" "continue" "local" "global" ";"] @keyword
 
 (return_statement "return" @keyword.return)
 
@@ -65,24 +69,28 @@
 
 ((identifier) @module.builtin
   (#any-of? @module.builtin
-    "__G" "debug" "io" "math" "os" "package" "string" "reg" "list" "utf8" "co"))
+    "__G" "debug" "io" "math" "os" "package" "string" "reg" "list" "utf8"
+    "table" "co"))
 
 (parameters (identifier) @variable.parameter)
 
-((identifier) @variable.parameter.builtin
-  (#eq? @variable.parameter.builtin "self")
-  (#has-ancestor? @variable.parameter.builtin function_definition)
-  (#has-ancestor? @variable.parameter.builtin metafield))
+(parameters
+  first: (identifier) @variable.parameter.builtin
+  (#eq? @variable.parameter.builtin "self"))
 
-((identifier) @variable.parameter.builtin
-  (#eq? @variable.parameter.builtin "self")
-  (#has-ancestor? @variable.parameter.builtin method))
+;((identifier) @variable.parameter.builtin
+;  (#eq? @variable.parameter.builtin "self")
+;  (#has-ancestor? @variable.parameter.builtin function_definition)
+;  (#has-ancestor? @variable.parameter.builtin metafield))
+;
+;((identifier) @variable.parameter.builtin
+;  (#eq? @variable.parameter.builtin "self")
+;  (#has-ancestor? @variable.parameter.builtin method))
 
-(variable_list
-  (attribute
-    "<" @punctuation.bracket
-    (identifier) @attribute
-    ">" @punctuation.bracket))
+(attribute
+  "<" @punctuation.bracket
+  (identifier) @attribute
+  ">" @punctuation.bracket)
 
 ;}{=Punctuation==================================
 
@@ -138,9 +146,14 @@
 
 (unary_expression operator: _ @operator)
 
-(function_call "?" @operator)
+(raw_access_char) @operator
+
+(call_check_char) @operator
 
 ["and" "or"] @keyword.operator
+
+; this must be after '*' operator
+(global_variable_declaration glob: "*" @variable.builtin)
 
 ;}{=Constant=====================================
 
@@ -148,13 +161,23 @@
 
 (vararg_expression) @constant
 
+; must be here to override vararg_expression
+(vararg
+  (vararg_expression) @variable.parameter
+  vararg_table: (identifier) @variable.parameter)
+
 (nil) @constant.builtin
 
 [(false) (true)] @boolean
 
 ;}{=Class========================================
 
-(variable_declaration
+(local_variable_declaration
+  (assignment
+    (variable_list . name: (identifier) @type)
+    (expression_list . value: (class_definition))))
+
+(global_variable_declaration
   (assignment
     (variable_list . name: (identifier) @type)
     (expression_list . value: (class_definition))))
@@ -210,14 +233,19 @@
 
 ;}{=Function=====================================
 
-(variable_declaration
+(local_variable_declaration
+  (assignment
+    (variable_list . name: (identifier) @function)
+    (expression_list . value: (function_definition))))
+
+(global_variable_declaration
   (assignment
     (variable_list . name: (identifier) @function)
     (expression_list . value: (function_definition))))
       
-(function_declaration name: (identifier) @function)
+(function_declaration . name: (identifier) @function)
 
-(function_statement
+(function_statement .
   name: [
     (identifier) @function
     (dot_index_expression
@@ -266,7 +294,8 @@
     "getmetatable" "setmetatable" "unwrapmethod" "getmethods"
     "setmethods" "nextfield" "fields" "indices" "pcall" "xpcall"
     "print" "printf" "warn" "len" "rawequal" "rawget" "rawset"
-    "getargs" "tonum" "tostr" "typeof" "getclass" "getsuper" "range"))
+    "getargs" "tonum" "tostr" "typeof" "getclass" "getsuper" "range"
+    "repeat"))
 
 ;}{==Other=======================================
 
