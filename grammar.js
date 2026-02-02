@@ -522,11 +522,10 @@ module.exports = grammar({
       seq(
         field("object", $._prefix_expression),
         $.raw_access_symbol,
-        choice(
-          field("field", $.identifier),
-          seq("[", field("field", $.expression), "]"),
-        ),
+        field("field", choice($.identifier, $.index_field)),
       ),
+
+    index_field: ($) => seq("[", field("value", $.expression), "]"),
 
     raw_access_symbol: (_) => "->",
 

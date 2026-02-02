@@ -94,11 +94,15 @@
 
 (dot_index_expression "." @punctuation.delimiter)
 
+(raw_access_symbol) @punctuation.delimiter
+
 ;}{=Bracket======================================
 
 ["(" ")"] @punctuation.bracket
 
 (bracket_index_expression ["[" "]"] @punctuation.bracket)
+
+(arrow_index_expression field: (index_field ["[" "]"] @punctuation.bracket))
 
 ;}{=List=========================================
 
@@ -109,6 +113,10 @@
 (field name: (identifier) @property)
 
 (dot_index_expression field: (identifier) @variable.member)
+
+(arrow_index_expression
+  (raw_access_symbol)
+  field: (identifier) @variable.member)
 
 (table_constructor ["{" "}"] @constructor)
 
@@ -131,8 +139,6 @@
 (binary_expression operator: _ @operator)
 
 (unary_expression operator: _ @operator)
-
-(raw_access_symbol) @operator
 
 (call_check_symbol) @operator
 

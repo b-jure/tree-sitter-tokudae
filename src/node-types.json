@@ -215,11 +215,11 @@
         "required": true,
         "types": [
           {
-            "type": "expression",
+            "type": "identifier",
             "named": true
           },
           {
-            "type": "identifier",
+            "type": "index_field",
             "named": true
           }
         ]
@@ -1441,6 +1441,22 @@
         "types": [
           {
             "type": "variable",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "index_field",
+    "named": true,
+    "fields": {
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
             "named": true
           }
         ]
