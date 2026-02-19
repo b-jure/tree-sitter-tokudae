@@ -513,6 +513,11 @@
     "fields": {}
   },
   {
+    "type": "call_check_symbol",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "call_statement",
     "named": true,
     "fields": {},
@@ -1246,7 +1251,7 @@
         "required": true,
         "types": [
           {
-            "type": "variable",
+            "type": "identifier",
             "named": true
           }
         ]
@@ -1621,12 +1626,24 @@
     "named": true,
     "fields": {
       "first": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
+            "type": ":",
+            "named": false
+          },
+          {
+            "type": "?",
+            "named": false
+          },
+          {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "|",
+            "named": false
           }
         ]
       },
@@ -1649,11 +1666,33 @@
             "named": false
           },
           {
+            "type": ":",
+            "named": false
+          },
+          {
+            "type": "?",
+            "named": false
+          },
+          {
             "type": "identifier",
             "named": true
           },
           {
             "type": "vararg",
+            "named": true
+          },
+          {
+            "type": "|",
+            "named": false
+          }
+        ]
+      },
+      "type": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
             "named": true
           }
         ]
@@ -1890,7 +1929,7 @@
     "type": "vararg",
     "named": true,
     "fields": {
-      "vararg_table": {
+      "vararg_list": {
         "multiple": false,
         "required": false,
         "types": [
@@ -2145,6 +2184,10 @@
     "named": false
   },
   {
+    "type": "?",
+    "named": false
+  },
+  {
     "type": "[",
     "named": false
   },
@@ -2175,10 +2218,6 @@
   {
     "type": "break",
     "named": false
-  },
-  {
-    "type": "call_check_symbol",
-    "named": true
   },
   {
     "type": "case",

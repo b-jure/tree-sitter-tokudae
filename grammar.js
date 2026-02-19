@@ -107,7 +107,9 @@ module.exports = grammar({
       seq(
         "fn",
         optional(field("attribute", alias($._attrib, $.attribute))),
-        $._function_statement,
+        field("name", $.identifier),
+        toparams($, $._parenthesized_parameters),
+        $._function_body,
       ),
 
     class_declaration: ($) =>
@@ -191,13 +193,15 @@ module.exports = grammar({
 
     continue_statement: (_) => seq("continue", ";"),
 
-    function_statement: ($) => seq("fn", $._function_statement),
-
-    _function_statement: ($) =>
-      seq(
-        field("name", $.variable),
-        toparams($, $._parenthesized_parameters),
-        $._function_body,
+    function_statement: ($) =>
+      prec(
+        2,
+        seq(
+          "fn",
+          field("name", $.variable),
+          toparams($, $._parenthesized_parameters),
+          $._function_body,
+        ),
       ),
 
     class_statement: ($) =>
@@ -616,7 +620,32 @@ module.exports = grammar({
         toparams($, $._lambda_parameters),
       ),
 
-    _parenthesized_parameters: ($) => seq("(", optional($._parameters), ")"),
+    _parenthesized_parameters: ($) =>
+      seq("(", optional($._typed_parameters), ")"),
+
+    _typed_parameters: ($) =>
+      choice(
+        seq(
+          field("first", seq($.identifier, optional($._parameter_types))),
+          field("rest", optional(seq(",", $._additional_typed_parameters))),
+        ),
+        $.vararg,
+      ),
+
+    _additional_typed_parameters: ($) =>
+      choice(
+        seq(list_seq($._typed_parameter, ","), optional(seq(",", $.vararg))),
+        $.vararg,
+      ),
+
+    _typed_parameter: ($) =>
+      seq(
+        field("name", $.identifier),
+        optional($._parameter_types),
+      ),
+
+    _parameter_types: ($) =>
+      seq(":", optional("?"), list_seq(field("type", $.identifier), "|")),
 
     _lambda_parameters: ($) => seq("|", optional($._parameters), "|"),
 
@@ -633,7 +662,7 @@ module.exports = grammar({
       choice(seq(name_list($), optional(seq(",", $.vararg))), $.vararg),
 
     vararg: ($) =>
-      seq($.vararg_expression, optional(field("vararg_table", $.identifier))),
+      seq($.vararg_expression, optional(field("vararg_list", $.identifier))),
 
     _function_body: ($) =>
       prec(
@@ -676,7 +705,7 @@ module.exports = grammar({
               field("operator", operator),
               field("right", $.expression),
             ),
-          ),
+          )
         ),
         ...[
           ["..", 9],
@@ -689,7 +718,7 @@ module.exports = grammar({
               field("operator", operator),
               field("right", $.expression),
             ),
-          ),
+          )
         ),
       ),
 

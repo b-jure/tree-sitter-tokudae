@@ -39,11 +39,11 @@
 
 (loop_statement "loop" @repeat)
 
-(if_statement "if" @conditional)
+(if_statement "if" @keyword.conditional)
 
-(else_statement "else" @conditional)
+(else_statement "else" @keyword.conditional)
 
-(switch_statement "switch" @conditional)
+(switch_statement "switch" @keyword.conditional)
 
 (switch_case "case" @label)
 
@@ -60,18 +60,21 @@
 
 ((identifier) @variable.builtin
   (#any-of? @variable.builtin
-    "__ENV" "__VERSION" "__POSIX" "__WINDOWS"))
+    "__ENV" "__VERSION" "__POSIX" "__WINDOWS" "__G"))
 
 ((identifier) @module.builtin
   (#any-of? @module.builtin
-    "__G" "debug" "io" "math" "os" "package" "string" "reg" "list" "utf8"
-    "table" "co"))
+    "debug" "io" "math" "os" "package" "string" "reg" "list" "utf8"
+    "table" "co" "json"))
 
 (parameters (identifier) @variable.parameter)
 
 (parameters
   first: (identifier) @variable.parameter.builtin
   (#eq? @variable.parameter.builtin "self"))
+
+(parameters type: (identifier) @type.builtin)
+(parameters ["|" "?"] @keyword)
 
 (attribute
   "<" @punctuation.bracket
@@ -156,7 +159,7 @@
 ; must be here to override vararg_expression
 (vararg
   (vararg_expression) @variable.parameter
-  vararg_table: (identifier) @variable.parameter)
+  vararg_list: (identifier) @variable.parameter)
 
 (nil) @constant.builtin
 
@@ -308,7 +311,7 @@
     "getmetatable" "setmetatable" "unwrapmethod" "getmethods"
     "setmethods" "nextfield" "fields" "indices" "pcall" "xpcall"
     "print" "printf" "warn" "len" "rawequal" "rawget" "rawset"
-    "getargs" "tonum" "tostr" "typeof" "getclass" "getsuper" "range"
+    "getargs" "tonum" "tostr" "type" "getclass" "getsuper" "range"
     "repeat"))
 
 ;}{==Other=======================================
