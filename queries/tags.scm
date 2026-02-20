@@ -1,4 +1,12 @@
-;{{==Function====================================
+;{{=Variable=====================================
+
+(global_variable_declaration 
+  (variable_list name: (identifier) @definition.variable))
+
+(local_variable_declaration
+  (variable_list name: (identifier) @definition.variable))
+
+;}{==Function====================================
 
 (function_declaration name: (identifier) @name) @definition.function
 
@@ -29,14 +37,6 @@
   value: (function_definition)) @definition.function
 
 (method name: (identifier) @name) @definition.method
-
-;}{=Variable=====================================
-
-(global_variable_declaration 
-  (variable_list name: (identifier) @definition.variable))
-
-(local_variable_declaration
-  (variable_list name: (identifier) @definition.variable))
 
 ;}{=Class========================================
 
@@ -104,3 +104,5 @@
     (dot_index_expression
       field: (identifier) @name)
   ]) @reference.call
+
+;}}==============================================
