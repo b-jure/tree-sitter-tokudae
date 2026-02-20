@@ -78,7 +78,7 @@
 
 (attribute
   "<" @punctuation.bracket
-  (identifier) @attribute
+  (identifier) @attribute.builtin
   ">" @punctuation.bracket)
 
 ;}{=Punctuation==================================
