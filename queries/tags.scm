@@ -30,6 +30,14 @@
 
 (method name: (identifier) @name) @definition.method
 
+;}{=Variable=====================================
+
+(global_variable_declaration 
+  (variable_list name: (identifier) @definition.variable))
+
+(local_variable_declaration
+  (variable_list name: (identifier) @definition.variable))
+
 ;}{=Class========================================
 
 (class_declaration name: (identifier) @name) @definition.class
@@ -88,13 +96,6 @@
 
 ((identifier) @reference.class
   (#eq? @reference.class "self")
-  (#has-ancestor? @reference.class method))
-
-((super) @reference.class
-  (#has-ancestor? @reference.class function_definition)
-  (#has-ancestor? @reference.class metafield))
-
-((super) @reference.class
   (#has-ancestor? @reference.class method))
 
 (final_call

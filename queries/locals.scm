@@ -11,7 +11,11 @@
 
 ;}{=Definition===================================
 
-(variable_declaration
+(global_variable_declaration
+  (variable_list
+    (identifier) @local.definition))
+
+(local_variable_declaration
   (variable_list
     (identifier) @local.definition))
 
