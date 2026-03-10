@@ -113,8 +113,6 @@
 
 ;}{=Table========================================
 
-(field name: (identifier) @property)
-
 (dot_index_expression field: (identifier) @variable.member)
 
 (arrow_index_expression
@@ -147,6 +145,8 @@
 
 ["and" "or"] @keyword.operator
 
+(table_constructor (field ["[" "]"] @operator))
+
 ; this must be after '*' operator
 (global_variable_declaration glob: "*" @variable.builtin)
 
@@ -154,9 +154,12 @@
 
 ((identifier) @constant (#match? @constant "^[A-Z][A-Z_0-9]*$"))
 
+; override identifier constants
+(field name: (identifier) @property)
+
 (vararg_expression) @constant
 
-; must be here to override vararg_expression
+; override regular vararg expression
 (vararg
   (vararg_expression) @variable.parameter
   vararg_list: (identifier) @variable.parameter)

@@ -726,7 +726,7 @@ module.exports = grammar({
       prec.left(
         12,
         seq(
-          field("operator", choice("!", "-", "~")),
+          field("operator", choice("!", "-", "~", "*", "&")),
           field("operand", $.expression),
         ),
       ),
