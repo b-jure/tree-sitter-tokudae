@@ -333,6 +333,8 @@
 
 (escape_sequence) @string.escape
 
+(escape_sequence_interpolation) @string.escape
+
 (final_call
   name: [
     (dot_index_expression
