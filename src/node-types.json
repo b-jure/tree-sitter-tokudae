@@ -50,6 +50,10 @@
         "named": true
       },
       {
+        "type": "fstring",
+        "named": true
+      },
+      {
         "type": "function_call",
         "named": true
       },
@@ -950,6 +954,21 @@
     "fields": {}
   },
   {
+    "type": "escape_sequence_interpolation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "escape_sequence",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "expression_list",
     "named": true,
     "fields": {
@@ -1204,6 +1223,42 @@
     }
   },
   {
+    "type": "fstring",
+    "named": true,
+    "fields": {
+      "content": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "string_content",
+            "named": true
+          }
+        ]
+      },
+      "end": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "\"",
+            "named": false
+          }
+        ]
+      },
+      "start": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "f\"",
+            "named": false
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "function_call",
     "named": true,
     "fields": {},
@@ -1454,6 +1509,22 @@
   },
   {
     "type": "index_field",
+    "named": true,
+    "fields": {
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "interpolation_expression",
     "named": true,
     "fields": {
       "value": {
@@ -1793,6 +1864,22 @@
       "types": [
         {
           "type": "escape_sequence",
+          "named": true
+        },
+        {
+          "type": "escape_sequence_interpolation",
+          "named": true
+        },
+        {
+          "type": "fstring_char",
+          "named": true
+        },
+        {
+          "type": "interpolation_expression",
+          "named": true
+        },
+        {
+          "type": "string_char",
           "named": true
         }
       ]
@@ -2204,6 +2291,10 @@
     "named": false
   },
   {
+    "type": "\\{",
+    "named": false
+  },
+  {
     "type": "]",
     "named": false
   },
@@ -2264,6 +2355,10 @@
     "named": true
   },
   {
+    "type": "f\"",
+    "named": false
+  },
+  {
     "type": "false",
     "named": true
   },
@@ -2278,6 +2373,10 @@
   {
     "type": "foreach",
     "named": false
+  },
+  {
+    "type": "fstring_char",
+    "named": true
   },
   {
     "type": "global",
@@ -2326,6 +2425,10 @@
   {
     "type": "return",
     "named": false
+  },
+  {
+    "type": "string_char",
+    "named": true
   },
   {
     "type": "super",

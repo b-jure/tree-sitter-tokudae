@@ -327,6 +327,10 @@
 
 (string) @string
 
+(fstring) @string
+
+(interpolation_expression ["{" "}"] @punctuation.special)
+
 (escape_sequence) @string.escape
 
 (final_call

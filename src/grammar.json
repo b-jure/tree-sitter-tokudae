@@ -1717,6 +1717,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "fstring"
+        },
+        {
+          "type": "SYMBOL",
           "name": "string"
         },
         {
@@ -2393,6 +2397,126 @@
         ]
       }
     },
+    "fstring": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "start",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "STRING",
+              "value": "f\""
+            },
+            "named": false,
+            "value": "f\""
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "content",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "fstring_content"
+                },
+                "named": true,
+                "value": "string_content"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "end",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "STRING",
+              "value": "\""
+            },
+            "named": false,
+            "value": "\""
+          }
+        }
+      ]
+    },
+    "fstring_content": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "fstring_char"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "interpolation_expression"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "escape_sequence_interpolation"
+          }
+        ]
+      }
+    },
+    "fstring_char": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[^\"\\\\{]+"
+        }
+      }
+    },
+    "interpolation_expression": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "{"
+        },
+        {
+          "type": "FIELD",
+          "name": "value",
+          "content": {
+            "type": "SYMBOL",
+            "name": "expression"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "escape_sequence_interpolation": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "IMMEDIATE_TOKEN",
+          "content": {
+            "type": "STRING",
+            "value": "\\{"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "escape_sequence"
+        }
+      ]
+    },
     "string": {
       "type": "CHOICE",
       "members": [
@@ -2464,21 +2588,25 @@
         "type": "CHOICE",
         "members": [
           {
-            "type": "IMMEDIATE_TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 1,
-              "content": {
-                "type": "PATTERN",
-                "value": "[^\"\\\\]+"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "string_char"
           },
           {
             "type": "SYMBOL",
             "name": "escape_sequence"
           }
         ]
+      }
+    },
+    "string_char": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[^\"\\\\]+"
+        }
       }
     },
     "escape_sequence": {

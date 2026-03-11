@@ -237,7 +237,7 @@ module.exports = grammar({
       ),
 
     _for_clause: ($) =>
-      choice(seq("(", $.for_clause, ")"), seq($.for_clause, ";")),
+      choice(seq("(", $.for_clause, ")"), seq($.for_clause, optional(";"))),
 
     for_clause: ($) =>
       seq(
@@ -357,6 +357,7 @@ module.exports = grammar({
         $.false,
         $.char,
         $.number,
+        $.fstring,
         $.string,
         $.vararg_expression,
         $.function_definition,
@@ -448,6 +449,33 @@ module.exports = grammar({
       );
     },
 
+    fstring: ($) =>
+      seq(
+        field("start", alias('f"', 'f"')),
+        field(
+          "content",
+          optional(alias($.fstring_content, $.string_content)),
+        ),
+        field("end", alias('"', '"')),
+      ),
+
+    fstring_content: ($) =>
+      repeat1(
+        choice(
+          $.fstring_char,
+          $.interpolation_expression,
+          $.escape_sequence_interpolation,
+        ),
+      ),
+
+    fstring_char: ($) => token.immediate(prec(1, /[^"\\{]+/)),
+
+    interpolation_expression: ($) =>
+      seq("{", field("value", $.expression), "}"),
+
+    escape_sequence_interpolation: ($) =>
+      choice(token.immediate("\\{"), $.escape_sequence),
+
     string: ($) => choice($._doublequote_string, $._block_string),
 
     _doublequote_string: ($) =>
@@ -461,7 +489,9 @@ module.exports = grammar({
       ),
 
     doublequote_string_content: ($) =>
-      repeat1(choice(token.immediate(prec(1, /[^"\\]+/)), $.escape_sequence)),
+      repeat1(choice($.string_char, $.escape_sequence)),
+
+    string_char: ($) => token.immediate(prec(1, /[^"\\]+/)),
 
     escape_sequence: (_) =>
       token.immediate(
@@ -535,7 +565,7 @@ module.exports = grammar({
 
     function_call: ($) => seq($.final_call, optional($.call_check_symbol)),
 
-    call_check_symbol: ($) => "?",
+    call_check_symbol: ($) => "!",
 
     final_call: ($) =>
       seq(field("name", $._prefix_expression), field("arguments", $.arguments)),
