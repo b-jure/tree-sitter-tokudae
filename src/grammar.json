@@ -1192,41 +1192,45 @@
       ]
     },
     "for_statement": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "for"
-        },
-        {
-          "type": "FIELD",
-          "name": "clause",
-          "content": {
-            "type": "SYMBOL",
-            "name": "_for_clause"
-          }
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "::"
-            },
-            {
-              "type": "BLANK"
+      "type": "PREC_LEFT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "for"
+          },
+          {
+            "type": "FIELD",
+            "name": "clause",
+            "content": {
+              "type": "SYMBOL",
+              "name": "_for_clause"
             }
-          ]
-        },
-        {
-          "type": "FIELD",
-          "name": "body",
-          "content": {
-            "type": "SYMBOL",
-            "name": "statement"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "::"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "FIELD",
+            "name": "body",
+            "content": {
+              "type": "SYMBOL",
+              "name": "statement"
+            }
           }
-        }
-      ]
+        ]
+      }
     },
     "foreach_statement": {
       "type": "SEQ",
@@ -2889,7 +2893,7 @@
     },
     "call_check_symbol": {
       "type": "STRING",
-      "value": "?"
+      "value": "!"
     },
     "final_call": {
       "type": "SEQ",

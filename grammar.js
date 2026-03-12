@@ -237,7 +237,7 @@ module.exports = grammar({
       ),
 
     _for_clause: ($) =>
-      choice(seq("(", $.for_clause, ")"), seq($.for_clause, optional(";"))),
+      choice(seq("(", $.for_clause, ")"), seq($.for_clause, ";")),
 
     for_clause: ($) =>
       seq(
@@ -254,12 +254,12 @@ module.exports = grammar({
       ),
 
     for_statement: ($) =>
-      seq(
+      prec.left(seq(
         "for",
         field("clause", $._for_clause),
         optional("::"),
         field("body", $.statement),
-      ),
+      )),
 
     foreach_statement: ($) =>
       seq(
