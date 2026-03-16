@@ -1193,6 +1193,81 @@
     }
   },
   {
+    "type": "foreach_generic_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression_list",
+          "named": true
+        },
+        {
+          "type": "variable_list",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "foreach_numeric_clause",
+    "named": true,
+    "fields": {
+      "end": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "=",
+            "named": false
+          }
+        ]
+      },
+      "start": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      },
+      "step": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "foreach_statement",
     "named": true,
     "fields": {
@@ -1208,15 +1283,15 @@
       }
     },
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
         {
-          "type": "expression_list",
+          "type": "foreach_generic_clause",
           "named": true
         },
         {
-          "type": "variable_list",
+          "type": "foreach_numeric_clause",
           "named": true
         }
       ]

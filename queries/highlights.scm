@@ -131,6 +131,11 @@
 
 (metafield "=" @operator.assignment)
 
+(foreach_numeric_clause
+  operator: "=" @operator)
+
+(foreach_numeric_clause "," @operator)
+
 (field "=" @operator.assignment)
 
 (compound_assignment

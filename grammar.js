@@ -264,11 +264,19 @@ module.exports = grammar({
     foreach_statement: ($) =>
       seq(
         "foreach",
+        choice(
+          $.foreach_numeric_clause,
+          $.foreach_generic_clause,
+        ),
+        optional("::"),
+        field("body", $.statement),
+      ),
+
+    foreach_generic_clause: ($) =>
+      seq(
         alias($._name_list, $.variable_list),
         "in",
         alias($._foreach_explist, $.expression_list),
-        optional("::"),
-        field("body", $.statement),
       ),
 
     _foreach_explist: ($) =>
@@ -289,6 +297,16 @@ module.exports = grammar({
             ),
           ),
         ),
+      ),
+
+    foreach_numeric_clause: ($) =>
+      seq(
+        field("name", $.identifier),
+        field("operator", "="),
+        field("start", $.expression),
+        ",",
+        field("end", $.expression),
+        optional(seq(",", field("step", $.expression))),
       ),
 
     if_statement: ($) =>
